@@ -133,31 +133,34 @@ public class LedgerLogic {
         return true;
     }
 
-    public SignedResponse getBalance(String userId) throws InvalidKeyException, NoSuchAlgorithmException, SignatureException{
+    public String getBalance(String userId) throws InvalidKeyException, NoSuchAlgorithmException, SignatureException{
         Optional<Account> userAccount = userAccounts.findById(userId);
         if (userAccount.isEmpty()) {
             return null;
         }
 
-        String dataExempleToSign = Double.toString(userAccount.get().getBalance());
+        String dataToSign = Double.toString(userAccount.get().getBalance());
+        
+        /* 
         Signature signer = Signature.getInstance("SHA256withECDSA");
         signer.initSign(this.privateKey);
-        signer.update(dataExempleToSign.getBytes(charset));
+        signer.update(dataToSign.getBytes(charset));
         byte[] dataSignedBytes = signer.sign();
         String dataSignedBytesBase64 = Base64.getEncoder().encodeToString(dataSignedBytes);
+        */
 
-        return new SignedResponse(dataExempleToSign, dataSignedBytesBase64, this.publicKeyBase64);
+        return dataToSign;
     }
 
-    public SignedResponse getExtract(String userId) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException{
+    public String getExtract(String userId) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException{
         //ArrayList<Transaction> filteredUsersTransactions = new ArrayList<>();
-        StringBuilder dataExempleToSignBuilder = new StringBuilder();
+        StringBuilder dataToSignBuilder = new StringBuilder();
         
         for(Transaction t : userTransactions.findAll()){
             if((t.getFrom() != null && t.getFrom().equals(userId)) || t.getTo().equals(userId)){
                 //filteredUsersTransactions.add(t);
 
-                dataExempleToSignBuilder.append(t.getId()).append("|")
+                dataToSignBuilder.append(t.getId()).append("|")
                 .append(t.getFrom()).append("|")
                 .append(t.getTo()).append("|")
                 .append(t.getAmount()).append("|")
@@ -166,17 +169,19 @@ public class LedgerLogic {
             }
         }
 
-        String dataExempleToSign = dataExempleToSignBuilder.toString();
+        String dataToSign = dataToSignBuilder.toString();
+        /* 
         Signature signer = Signature.getInstance("SHA256withECDSA");
         signer.initSign(this.privateKey);
-        signer.update(dataExempleToSign.getBytes(charset));
+        signer.update(dataToSign.getBytes(charset));
         byte[] dataSignedBytes = signer.sign();
         String dataSignedBytesBase64 = Base64.getEncoder().encodeToString(dataSignedBytes);
+        */
 
-        return new SignedResponse(dataExempleToSign, dataSignedBytesBase64, this.publicKeyBase64);
+        return dataToSign;
     }
 
-    public SignedResponse getTotalValue(List<String> userIds) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+    public String getTotalValue(List<String> userIds) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
         double totalAmount = 0.0;
         
         for(String s : userIds){
@@ -186,40 +191,46 @@ public class LedgerLogic {
             }
         }
 
-        String dataExempleToSign = Double.toString(totalAmount);
+        String dataToSign = Double.toString(totalAmount);
+
+        /* 
         Signature signer = Signature.getInstance("SHA256withECDSA");
         signer.initSign(this.privateKey);
-        signer.update(dataExempleToSign.getBytes(charset));
+        signer.update(dataToSign.getBytes(charset));
         byte[] dataSignedBytes = signer.sign();
         String dataSignedBytesBase64 = Base64.getEncoder().encodeToString(dataSignedBytes);
+        */
 
-        return new SignedResponse(dataExempleToSign, dataSignedBytesBase64, this.publicKeyBase64);
+        return dataToSign;
     }
 
-    public SignedResponse getGlobalLedgerValue() throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+    public String getGlobalLedgerValue() throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
         double totalAmount = 0.0;
 
         for(Account a : userAccounts.findAll()){
             totalAmount += a.getBalance();
         }
 
-        String dataExempleToSign = Double.toString(totalAmount);
+        String dataToSign = Double.toString(totalAmount);
+
+        /* 
         Signature signer = Signature.getInstance("SHA256withECDSA");
         signer.initSign(this.privateKey);
-        signer.update(dataExempleToSign.getBytes(charset));
+        signer.update(dataToSign.getBytes(charset));
         byte[] dataSignedBytes = signer.sign();
         String dataSignedBytesBase64 = Base64.getEncoder().encodeToString(dataSignedBytes);
+        */
 
-        return new SignedResponse(dataExempleToSign, dataSignedBytesBase64, this.publicKeyBase64);
+        return dataToSign;
     }
 
-    public SignedResponse getLedger() throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+    public String getLedger() throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
 
-        StringBuilder dataExempleToSignBuilder = new StringBuilder();
+        StringBuilder dataToSignBuilder = new StringBuilder();
         
         for(Transaction t : userTransactions.findAll()){
 
-            dataExempleToSignBuilder.append(t.getId()).append("|")
+            dataToSignBuilder.append(t.getId()).append("|")
             .append(t.getFrom()).append("|")
             .append(t.getTo()).append("|")
             .append(t.getAmount()).append("|")
@@ -227,14 +238,17 @@ public class LedgerLogic {
 
         }
 
-        String dataExempleToSign = dataExempleToSignBuilder.toString();
+        String dataToSign = dataToSignBuilder.toString();
+
+        /* 
         Signature signer = Signature.getInstance("SHA256withECDSA");
         signer.initSign(this.privateKey);
-        signer.update(dataExempleToSign.getBytes(charset));
+        signer.update(dataToSign.getBytes(charset));
         byte[] dataSignedBytes = signer.sign();
         String dataSignedBytesBase64 = Base64.getEncoder().encodeToString(dataSignedBytes);
+        */
 
-        return new SignedResponse(dataExempleToSign, dataSignedBytesBase64, this.publicKeyBase64);
+        return dataToSign;
     }
 
     public String getInfo() {

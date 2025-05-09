@@ -2,7 +2,7 @@ package com.rodel.rodel.objects;
 
 import java.io.Serializable;
 
-public class SignedResponse implements Serializable{
+public class SignedResponse implements Serializable {
 
     private String message;
     private String signedMessage;

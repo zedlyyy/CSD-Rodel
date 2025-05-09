@@ -1,6 +1,6 @@
 package com.rodel.rodel.objects;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,7 +19,7 @@ public class Transaction {
     private String fromUser;
     private String toUser;
     private double amount;
-    private LocalDateTime timeStamp;
+    private LocalDate timeStamp;
 
     public Transaction () {}
 
@@ -27,7 +27,7 @@ public class Transaction {
         this.fromUser       = fromUser;
         this.toUser         = toUser;
         this.amount     = amount;
-        this.timeStamp  = LocalDateTime.now();
+        this.timeStamp  = LocalDate.now();
     }
 
 
@@ -59,11 +59,11 @@ public class Transaction {
         this.amount = amount;
     }
 
-    public LocalDateTime getTimeStamp() {
+    public LocalDate getTimeStamp() {
         return timeStamp;
     }
 
-    public void setTimeStamp(LocalDateTime timeStamp) {
+    public void setTimeStamp(LocalDate timeStamp) {
         this.timeStamp = timeStamp;
     }
 

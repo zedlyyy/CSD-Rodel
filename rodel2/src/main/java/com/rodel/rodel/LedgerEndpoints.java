@@ -2,9 +2,11 @@ package com.rodel.rodel;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.Signature;
 import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +40,7 @@ import com.rodel.rodel.signverification.GetLedgerVerification;
 import com.rodel.rodel.signverification.GetTotalValueVerification;
 import com.rodel.rodel.signverification.LoadMoneyVerification;
 import com.rodel.rodel.signverification.TransactionVerification;
+import com.rodel.rodel.util.RestKeys;
 
 
 @RestController
@@ -70,6 +73,9 @@ public class LedgerEndpoints {
 
     @Autowired
     private GetLedgerVerification getLedgerVerifier;
+
+    @Autowired
+    private RestKeys serverKeys;
 
     private final LedgerClientBFT bftClient = new LedgerClientBFT(0);
 
@@ -120,9 +126,15 @@ public class LedgerEndpoints {
         //SignedResponse signedResponse = ledgerLogic.getBalance(accountId);
         Object obj = bftClient.sendOperation(getBalanceDTO);
 
-        JSONObject json = new JSONObject(obj.toString());
+        String dataToSign = (String) obj;
 
-        return ResponseEntity.ok(json.toMap());
+        Signature signer = Signature.getInstance("SHA256withECDSA");
+        signer.initSign(serverKeys.getPrivateKey());
+        signer.update(dataToSign.getBytes(serverKeys.getCharset()));
+        byte[] dataSignedBytes = signer.sign();
+        String dataSignedBytesBase64 = Base64.getEncoder().encodeToString(dataSignedBytes);
+
+        return ResponseEntity.ok(new SignedResponse(dataToSign, dataSignedBytesBase64, serverKeys.getPublicKeyBase64()));
     }
 
     @GetMapping("/getextract")
@@ -137,9 +149,15 @@ public class LedgerEndpoints {
         //SignedResponse signedResponse = ledgerLogic.getExtract(accountId);
         Object obj = bftClient.sendOperation(getExtractDTO);
 
-        JSONObject json = new JSONObject(obj.toString());
+        String dataToSign = (String) obj;
 
-        return ResponseEntity.ok(json.toMap());
+        Signature signer = Signature.getInstance("SHA256withECDSA");
+        signer.initSign(serverKeys.getPrivateKey());
+        signer.update(dataToSign.getBytes(serverKeys.getCharset()));
+        byte[] dataSignedBytes = signer.sign();
+        String dataSignedBytesBase64 = Base64.getEncoder().encodeToString(dataSignedBytes);
+
+        return ResponseEntity.ok(new SignedResponse(dataToSign, dataSignedBytesBase64, serverKeys.getPublicKeyBase64()));
     }
 
     @GetMapping("/gettotalvalue")
@@ -152,9 +170,16 @@ public class LedgerEndpoints {
         //SignedResponse signedResponse = ledgerLogic.getTotalValue(accountsId);
         Object obj = bftClient.sendOperation(getTotalValueDTO);
 
-        JSONObject json = new JSONObject(obj.toString());
+        String dataToSign = (String) obj;
 
-        return ResponseEntity.ok(json.toMap());
+        Signature signer = Signature.getInstance("SHA256withECDSA");
+        signer.initSign(serverKeys.getPrivateKey());
+        signer.update(dataToSign.getBytes(serverKeys.getCharset()));
+        byte[] dataSignedBytes = signer.sign();
+        String dataSignedBytesBase64 = Base64.getEncoder().encodeToString(dataSignedBytes);
+
+
+        return ResponseEntity.ok(new SignedResponse(dataToSign, dataSignedBytesBase64, serverKeys.getPublicKeyBase64()));
     }
 
     @GetMapping("/getgloballedgervalue")
@@ -167,9 +192,15 @@ public class LedgerEndpoints {
         //SignedResponse signedResponse = ledgerLogic.getGlobalLedgerValue();
         Object obj = bftClient.sendOperation(getGlobalLedgerValueDTO);
 
-        JSONObject json = new JSONObject(obj.toString());
+        String dataToSign = (String) obj;
 
-        return ResponseEntity.ok(json.toMap());
+        Signature signer = Signature.getInstance("SHA256withECDSA");
+        signer.initSign(serverKeys.getPrivateKey());
+        signer.update(dataToSign.getBytes(serverKeys.getCharset()));
+        byte[] dataSignedBytes = signer.sign();
+        String dataSignedBytesBase64 = Base64.getEncoder().encodeToString(dataSignedBytes);
+
+        return ResponseEntity.ok(new SignedResponse(dataToSign, dataSignedBytesBase64, serverKeys.getPublicKeyBase64()));
     }
 
     @GetMapping("/getledger")
@@ -182,9 +213,15 @@ public class LedgerEndpoints {
         //SignedResponse signedResponse = ledgerLogic.getLedger();
         Object obj = bftClient.sendOperation(getLedgerDTO);
 
-        JSONObject json = new JSONObject(obj.toString());
+        String dataToSign = (String) obj;
 
-        return ResponseEntity.ok(json.toMap());
+        Signature signer = Signature.getInstance("SHA256withECDSA");
+        signer.initSign(serverKeys.getPrivateKey());
+        signer.update(dataToSign.getBytes(serverKeys.getCharset()));
+        byte[] dataSignedBytes = signer.sign();
+        String dataSignedBytesBase64 = Base64.getEncoder().encodeToString(dataSignedBytes);
+
+        return ResponseEntity.ok(new SignedResponse(dataToSign, dataSignedBytesBase64, serverKeys.getPublicKeyBase64()));
     }
 
 }

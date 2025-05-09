@@ -11,7 +11,7 @@ import bftsmart.tom.ServiceReplica;
 public class RodelApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(RodelApplication.class, args);
+		SpringApplication.run(RodelApplication.class, args); 
 		new LedgerReplica();
 	}
 
