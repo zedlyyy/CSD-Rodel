@@ -1,7 +1,6 @@
 package com.rodel.rodel.dto;
 
 import java.io.Serializable;
-import java.util.List;
 
 public class GetLedgerDTO implements Serializable{
     public String accountId;

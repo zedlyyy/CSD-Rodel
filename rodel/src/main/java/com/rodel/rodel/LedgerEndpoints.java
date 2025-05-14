@@ -5,15 +5,10 @@ import java.security.NoSuchAlgorithmException;
 import java.security.Signature;
 import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.ArrayList;
 import java.util.Base64;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigurationPackage;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,7 +26,6 @@ import com.rodel.rodel.dto.GetGlobalLedgerValueDTO;
 import com.rodel.rodel.dto.GetLedgerDTO;
 import com.rodel.rodel.dto.GetTotalValueDTO;
 import com.rodel.rodel.objects.SignedResponse;
-import com.rodel.rodel.objects.Transaction;
 import com.rodel.rodel.signverification.CreateAccountVerification;
 import com.rodel.rodel.signverification.GetBalanceVerification;
 import com.rodel.rodel.signverification.GetExtractVerification;
@@ -47,8 +41,6 @@ import com.rodel.rodel.util.RestKeys;
 @RequestMapping("/endpoints")
 public class LedgerEndpoints {
     
-    //@Autowired
-    //private LedgerLogic ledgerLogic;
     
     @Autowired
     private TransactionVerification trasactionVerifier;
@@ -123,7 +115,6 @@ public class LedgerEndpoints {
         }
 
         GetBalanceDTO getBalanceDTO = new GetBalanceDTO(accountId);
-        //SignedResponse signedResponse = ledgerLogic.getBalance(accountId);
         Object obj = bftClient.sendOperation(getBalanceDTO);
 
         String dataToSign = (String) obj;
@@ -146,7 +137,6 @@ public class LedgerEndpoints {
         }
 
         GetExtractDTO getExtractDTO = new GetExtractDTO(accountId);
-        //SignedResponse signedResponse = ledgerLogic.getExtract(accountId);
         Object obj = bftClient.sendOperation(getExtractDTO);
 
         String dataToSign = (String) obj;
@@ -167,7 +157,6 @@ public class LedgerEndpoints {
         } 
 
         GetTotalValueDTO getTotalValueDTO = new GetTotalValueDTO(accountsId);
-        //SignedResponse signedResponse = ledgerLogic.getTotalValue(accountsId);
         Object obj = bftClient.sendOperation(getTotalValueDTO);
 
         String dataToSign = (String) obj;
@@ -189,7 +178,6 @@ public class LedgerEndpoints {
         }
 
         GetGlobalLedgerValueDTO getGlobalLedgerValueDTO = new GetGlobalLedgerValueDTO(accountId);
-        //SignedResponse signedResponse = ledgerLogic.getGlobalLedgerValue();
         Object obj = bftClient.sendOperation(getGlobalLedgerValueDTO);
 
         String dataToSign = (String) obj;
@@ -210,7 +198,6 @@ public class LedgerEndpoints {
         }
        
         GetLedgerDTO getLedgerDTO = new GetLedgerDTO(accountId);
-        //SignedResponse signedResponse = ledgerLogic.getLedger();
         Object obj = bftClient.sendOperation(getLedgerDTO);
 
         String dataToSign = (String) obj;

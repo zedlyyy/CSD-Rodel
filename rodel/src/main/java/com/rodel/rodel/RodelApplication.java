@@ -2,9 +2,6 @@ package com.rodel.rodel;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.builder.SpringApplicationBuilder;
-
-import bftsmart.tom.ServiceReplica;
 
 
 @SpringBootApplication

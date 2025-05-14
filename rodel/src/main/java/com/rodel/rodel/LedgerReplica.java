@@ -4,8 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.NoSuchAlgorithmException;
 
 import com.rodel.rodel.dto.CreateAccountDTO;
 import com.rodel.rodel.dto.GetBalanceDTO;
@@ -18,7 +16,6 @@ import com.rodel.rodel.dto.TransactionDTO;
 import com.rodel.rodel.util.SpringContext;
 
 import bftsmart.tom.MessageContext;
-import bftsmart.tom.server.SingleExecutable;
 import bftsmart.tom.server.defaultservices.DefaultSingleRecoverable;
 import bftsmart.tom.ServiceReplica;
 
@@ -76,15 +73,7 @@ public class LedgerReplica extends DefaultSingleRecoverable  {
         }
     }
 
-    public static void main(String[] args) {
-        if ( args.length != 1 ){
-            System.out.println("DO: java LedgerReplica [id]");
-            System.exit(0);
-        }
-
-        int replicaId = Integer.parseInt(args[0]);
-        //new ServiceReplica(replicaId, new LedgerReplica(), new LedgerReplica() );
-    }
+    public static void main(String[] args) {}
 
     @Override
     public void installSnapshot(byte[] state) {

@@ -12,7 +12,6 @@ import java.util.Base64;
 
 import org.springframework.stereotype.Service;
 
-import com.rodel.rodel.dto.CreateAccountDTO;
 
 @Service
 public class GetBalanceVerification {

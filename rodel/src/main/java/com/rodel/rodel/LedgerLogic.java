@@ -1,15 +1,7 @@
 package com.rodel.rodel;
 
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.spec.ECGenParameterSpec;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,47 +9,12 @@ import org.springframework.stereotype.Service;
 import com.rodel.rodel.database.CrudRepositoryAccounts;
 import com.rodel.rodel.database.CrudRepositoryTransactions;
 import com.rodel.rodel.objects.Account;
-import com.rodel.rodel.objects.SignedResponse;
 import com.rodel.rodel.objects.Transaction;
 
-
-
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.Signature;
-import java.security.SignatureException;
-import java.security.spec.ECGenParameterSpec;
-import java.time.Instant;
-import java.util.Base64;
-import java.util.Scanner;
-import java.net.URL;
-import java.net.URLEncoder;
 
 @Service
 public class LedgerLogic {
 
-    private String info = "This is the ledger !";
-
-    private final PrivateKey privateKey;
-    private final PublicKey publicKey;
-    private final String publicKeyBase64;
-    static Charset charset = StandardCharsets.UTF_8;
 
     @Autowired
     private CrudRepositoryAccounts userAccounts;
@@ -66,21 +23,7 @@ public class LedgerLogic {
     private CrudRepositoryTransactions userTransactions;
 
 
-    public LedgerLogic() throws NoSuchAlgorithmException, InvalidAlgorithmParameterException {
-        KeyPairGenerator keyGenerator = KeyPairGenerator.getInstance("EC");
-
-        ECGenParameterSpec ecSpec = new ECGenParameterSpec("secp256r1");
-        keyGenerator.initialize(ecSpec);
-
-        KeyPair clientKeyPair = keyGenerator.generateKeyPair();
-
-        this.privateKey = clientKeyPair.getPrivate();
-        this.publicKey = clientKeyPair.getPublic();
-
-        this.publicKeyBase64 = Base64.getEncoder().encodeToString(publicKey.getEncoded());
-
-
-    }
+    public LedgerLogic() {}
 
     public boolean createAccount(String userId){
         if(userAccounts.existsById(userId)){
@@ -133,32 +76,32 @@ public class LedgerLogic {
         return true;
     }
 
-    public String getBalance(String userId) throws InvalidKeyException, NoSuchAlgorithmException, SignatureException{
+    public String getBalance(String userId) {
         Optional<Account> userAccount = userAccounts.findById(userId);
         if (userAccount.isEmpty()) {
             return null;
         }
 
-        String dataToSign = Double.toString(userAccount.get().getBalance());
-        
-        /* 
-        Signature signer = Signature.getInstance("SHA256withECDSA");
-        signer.initSign(this.privateKey);
-        signer.update(dataToSign.getBytes(charset));
-        byte[] dataSignedBytes = signer.sign();
-        String dataSignedBytesBase64 = Base64.getEncoder().encodeToString(dataSignedBytes);
-        */
+        double balance = 0.0;
 
-        return dataToSign;
+        for(Transaction t : userTransactions.findAll()){
+
+            if(t.getFrom() != null && t.getFrom().equals(userId)){
+                balance -= t.getAmount();
+            }
+            if(t.getTo().equals(userId)) {
+                balance += t.getAmount();
+            }
+        }
+
+        return Double.toString(balance);
     }
 
-    public String getExtract(String userId) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException{
-        //ArrayList<Transaction> filteredUsersTransactions = new ArrayList<>();
+    public String getExtract(String userId) {
         StringBuilder dataToSignBuilder = new StringBuilder();
         
         for(Transaction t : userTransactions.findAll()){
             if((t.getFrom() != null && t.getFrom().equals(userId)) || t.getTo().equals(userId)){
-                //filteredUsersTransactions.add(t);
 
                 dataToSignBuilder.append(t.getId()).append("|")
                 .append(t.getFrom()).append("|")
@@ -169,19 +112,10 @@ public class LedgerLogic {
             }
         }
 
-        String dataToSign = dataToSignBuilder.toString();
-        /* 
-        Signature signer = Signature.getInstance("SHA256withECDSA");
-        signer.initSign(this.privateKey);
-        signer.update(dataToSign.getBytes(charset));
-        byte[] dataSignedBytes = signer.sign();
-        String dataSignedBytesBase64 = Base64.getEncoder().encodeToString(dataSignedBytes);
-        */
-
-        return dataToSign;
+        return dataToSignBuilder.toString();
     }
 
-    public String getTotalValue(List<String> userIds) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+    public String getTotalValue(List<String> userIds) {
         double totalAmount = 0.0;
         
         for(String s : userIds){
@@ -191,40 +125,20 @@ public class LedgerLogic {
             }
         }
 
-        String dataToSign = Double.toString(totalAmount);
-
-        /* 
-        Signature signer = Signature.getInstance("SHA256withECDSA");
-        signer.initSign(this.privateKey);
-        signer.update(dataToSign.getBytes(charset));
-        byte[] dataSignedBytes = signer.sign();
-        String dataSignedBytesBase64 = Base64.getEncoder().encodeToString(dataSignedBytes);
-        */
-
-        return dataToSign;
+        return Double.toString(totalAmount);
     }
 
-    public String getGlobalLedgerValue() throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+    public String getGlobalLedgerValue() {
         double totalAmount = 0.0;
 
         for(Account a : userAccounts.findAll()){
             totalAmount += a.getBalance();
         }
 
-        String dataToSign = Double.toString(totalAmount);
-
-        /* 
-        Signature signer = Signature.getInstance("SHA256withECDSA");
-        signer.initSign(this.privateKey);
-        signer.update(dataToSign.getBytes(charset));
-        byte[] dataSignedBytes = signer.sign();
-        String dataSignedBytesBase64 = Base64.getEncoder().encodeToString(dataSignedBytes);
-        */
-
-        return dataToSign;
+        return Double.toString(totalAmount);
     }
 
-    public String getLedger() throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+    public String getLedger() {
 
         StringBuilder dataToSignBuilder = new StringBuilder();
         
@@ -238,22 +152,7 @@ public class LedgerLogic {
 
         }
 
-        String dataToSign = dataToSignBuilder.toString();
-
-        /* 
-        Signature signer = Signature.getInstance("SHA256withECDSA");
-        signer.initSign(this.privateKey);
-        signer.update(dataToSign.getBytes(charset));
-        byte[] dataSignedBytes = signer.sign();
-        String dataSignedBytesBase64 = Base64.getEncoder().encodeToString(dataSignedBytes);
-        */
-
-        return dataToSign;
+        return dataToSignBuilder.toString();
     }
-
-    public String getInfo() {
-        return info;
-    }
-
 
 }
