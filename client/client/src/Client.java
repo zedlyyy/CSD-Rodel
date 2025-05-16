@@ -52,13 +52,8 @@ public class Client {
 
         String clientEmail = args[0];
         String secretKey = args[1];
-        String operation = args[2];
-        
+        String operation = args[2].trim().toLowerCase();
 
-        /*String clientEmail = "email";
-        String secretKey = "sporting";
-        String operation = "loadmoney";
-        */
 
         // Public/Private Keys creation
         KeyPairGenerator keyGenerator = KeyPairGenerator.getInstance("EC");
@@ -72,7 +67,6 @@ public class Client {
         PublicKey publicKey = clientKeyPair.getPublic();
 
         //Strings of each key
-        String privateKeyBase64 = Base64.getEncoder().encodeToString(privateKey.getEncoded());
         String publicKeyBase64 = Base64.getEncoder().encodeToString(publicKey.getEncoded());
 
         String timestamp = Instant.now().toString();
@@ -106,7 +100,15 @@ public class Client {
                 System.out.print(">");
                 double amount = scanner.nextDouble();
                 scanner.nextLine();
+
+                long start = System.nanoTime();
                 loadMoneyCall(accountIdEncryptedBase64, amount, privateKey, publicKeyBase64);
+            
+                long end = System.nanoTime();
+                long latencyMillis = (end - start) / 1_000_000;
+                
+                System.out.println("Latency: " + latencyMillis);
+
             break;
             
             case "sendtransaction":
@@ -115,44 +117,117 @@ public class Client {
                 String[] message = scanner.nextLine().split(" ");
                 String destId = message[0];
                 double amountTransaction = Double.parseDouble(message[1]);
+                
+                start = System.nanoTime();
+                
                 sendTransactionCall(accountIdEncryptedBase64, destId, amountTransaction, privateKey, publicKeyBase64); 
+                
+                end = System.nanoTime();
+                latencyMillis = (end - start) / 1_000_000;
+
+                System.out.println("Latency: " + latencyMillis);
+
             break;
             
             case "getbalance":
+                
+                start = System.nanoTime();
+
                 getBalanceCall(accountIdEncryptedBase64, privateKey, publicKeyBase64);
+                
+                end = System.nanoTime();
+                latencyMillis = (end - start) / 1_000_000;
+
+                System.out.println("Latency: " + latencyMillis);
+
             break;
             
             case "getextract":
+
+                start = System.nanoTime();
+
                 getExtractCall(accountIdEncryptedBase64, privateKey, publicKeyBase64);
+                
+                end = System.nanoTime();
+                latencyMillis = (end - start) / 1_000_000;
+
+                System.out.println("Latency: " + latencyMillis);
+            
             break;
             
             case "gettotalvalue":
                 System.out.println("Please type in the acconts to get the total value all split by a space");
                 System.out.print(">");
                 String[] accounts = scanner.nextLine().split(" ");
+                
+                start = System.nanoTime();
+
                 getTotalValueCall(accounts,accountIdEncryptedBase64, privateKey, publicKeyBase64);
+            
+                end = System.nanoTime();
+                latencyMillis = (end - start) / 1_000_000;
+
+                System.out.println("Latency: " + latencyMillis);
+
             break;
 
             case "getgloballedgervalue":
+
+                start = System.nanoTime();
+
                 getGlobalLedgerValue(accountIdEncryptedBase64, privateKey, publicKeyBase64);
+            
+                end = System.nanoTime();
+                latencyMillis = (end - start) / 1_000_000;
+
+                System.out.println("Latency: " + latencyMillis);
+            
             break;
 
             case "getledger":
+
+                start = System.nanoTime();
+
                 getLedger(accountIdEncryptedBase64, privateKey, publicKeyBase64);
+            
+                end = System.nanoTime();
+                latencyMillis = (end - start) / 1_000_000;
+
+                System.out.println("Latency: " + latencyMillis);
+            
+            break;
+
+            case "--help":
+                help();
             break;
 
             case "exit":
+                scanner.close();
                 System.out.println("Bye !!!");
                 return;
             default:
                 System.out.println("Wrong operation !");
+                System.out.println("Type --help to know the available operations");
             }
             System.out.println("Write another operation or type 'exit' to end the service.");
             System.out.print(">");
-            operation   = scanner.nextLine();
+            operation   = scanner.nextLine().trim().toLowerCase();
             
         }
         
+    }
+
+    private static void help() {
+        System.out.println(" !  AVAILABLE COMMANDS ! \n");
+        System.out.println("-> loadmoney\n");
+        System.out.println("-> sendtransaction\n");
+        System.out.println("-> getbalance\n");
+        System.out.println("-> getextract\n");
+        System.out.println("-> gettotalvalue\n");
+        System.out.println("-> getgloballedgervalue\n");
+        System.out.println("-> getledger\n");
+        System.out.println("-> exit\n");
+        System.out.println("--help\n");
     }
 
     private static void getLedger(String accountIdEncryptedBase64, PrivateKey privateKey, String publicKeyBase64) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException, URISyntaxException, IOException, InvalidKeySpecException {
