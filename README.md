@@ -6,7 +6,7 @@ As réplicas que têm que ser corridas estão nos devidos directories:
 - rodel
 - rodel1
 - rodel2
-- rodel3 
+- rodel3   
 Cada réplica tem que ser corrida com o comando `./mvnw spring-boot:run`.
 # Como correr o client 
 Depois de as réplicas reconherem-se, teremos de correr o nosso client.
