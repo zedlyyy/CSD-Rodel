@@ -20,8 +20,9 @@ E para executar fazemos:
   
 Tanto `email` como `secretKey` são arbitrários sendo o client que decide esses valores. 
 No caso da `operation` essa já tem que ser uma das operações implementadas no projeto. 
-Exemplo:   
-- `java -cp ".:bin:json-20250107.jar" Client pedro@gmail.com sporting loadmoney` 
+Exemplo:     
+- `java -cp ".:bin:json-20250107.jar" Client pedro@gmail.com sporting loadmoney`
+   
 Depois de feita a primeira operação uma conta é automaticamente criada com o id que será exibido no terminal.
 Posteriomente à primeira operação poderá ser executado o comando `--help` para mostrar os comandos implementados e `exit` para terminar a sessão.
 
