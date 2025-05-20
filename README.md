@@ -24,7 +24,9 @@ Exemplo:
 - `java -cp ".:bin:json-20250107.jar" Client pedro@gmail.com sporting loadmoney`
    
 Depois de feita a primeira operação uma conta é automaticamente criada com o id que será exibido no terminal.  
-Posteriormente à primeira operação poderá ser executado o comando `--help` para mostrar os comandos implementados e `exit` para terminar a sessão.
+Posteriormente à primeira operação poderá ser executado o comando `--help` para mostrar os comandos implementados e `exit` para terminar a sessão.  
+# Sobre o benchmark do Gatling
+De momento, a benchmark apenas funciona com uma outra versão do rodel que tenho o qual não existem verificações/assinaturas nas mensagens trocadas pois isso permite ao gatling fazer as requests sem qualquer tipo de encriptção, que dificultaria a execução da benchmark.
 
 
 
