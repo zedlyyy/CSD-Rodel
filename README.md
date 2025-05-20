@@ -12,10 +12,10 @@ Cada réplica tem que ser corrida com o comando `./mvnw spring-boot:run`.
 # Como correr o client 
 Depois de as réplicas reconherem-se, teremos de correr o nosso client.
 Para compilar o nosso client fazemos: 
-- `javac -cp ".:json-20250107.jar" -d bin src/Client.java src/objects/*.java`
-E para executar fazemos:
+- `javac -cp ".:json-20250107.jar" -d bin src/Client.java src/objects/*.java`  
+E para executar fazemos:  
 - `java -cp ".:bin:json-20250107.jar" Client email secretKey operation`
--  
+  
 Tanto `email` como `secretKey` são arbitrários sendo o client que decide esses valores. 
 No caso da `operation` essa já tem que ser uma das operações implementadas no projeto. 
 Exemplo:   
