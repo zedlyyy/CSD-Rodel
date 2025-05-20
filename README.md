@@ -28,7 +28,6 @@ Posteriormente à primeira operação poderá ser executado o comando `--help` p
 # Sobre o benchmark do Gatling
 De momento, a benchmark apenas funciona com uma outra versão do rodel que tenho o qual não existem verificações/assinaturas nas mensagens trocadas pois isso permite ao gatling fazer as requests sem qualquer tipo de encriptção, que dificultaria a execução da benchmark.  
 O teste tem o nome: `LedgerBenchmarks.java` em `CSD-Rodel/gatlingBenchmarks/src/test/java/example/LedgerBenchmarks.java`.  
-
 Para correr o teste teriamos que fazer:  
 - `./mvnw gatling:test`
 
