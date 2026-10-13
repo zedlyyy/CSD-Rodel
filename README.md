@@ -1,4 +1,15 @@
 # CSD-Rodel
+
+## Overview
+
+Academic distributed-systems project implementing a replicated ledger-style service in Java. It includes multiple server replicas, a command-line client for ledger operations, and a separate Gatling benchmark setup.
+
+**Technologies:** Java, Spring Boot, distributed systems, Gatling.
+
+**Key components:** Four replica configurations, command-line client, operation handling, performance-testing setup.
+
+---
+
 Project For CSD-2025 by **Pedro Galego** 72298 
 
 # Como correr o Rodel
